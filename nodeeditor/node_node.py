@@ -421,7 +421,6 @@ class Node(Serializable):
                 other_nodes.append(other_node)
         return other_nodes
 
-
     def getInput(self, index: int=0) -> ['Node', None]:
         """
         获取当前节点的第index个输入端（inputs[index]）的上游连接点node
@@ -485,22 +484,39 @@ class Node(Serializable):
             dumpException(e)
             return None, None
 
-    def getInputs(self, index: int=0) -> 'List[Node]':
-        """
-        获取当前节点的第index个输入端（inputs[index]）的上游连接点所有nodes
-        正常情况来说一般一个input点只能被一个edge连接，如果有特殊需求设置成输入端允许被多条线连接则可以用这个方法
-        Get **all** `Nodes` connected to the Input specified by `index`
+    # def getInputs(self, index: int=0) -> 'List[Node]':
+    #     """
+    #     获取当前节点的第index个输入端（inputs[index]）的上游连接点所有nodes
+    #     正常情况来说一般一个input点只能被一个edge连接，如果有特殊需求设置成输入端允许被多条线连接则可以用这个方法
+    #     Get **all** `Nodes` connected to the Input specified by `index`
+    #
+    #     :param index: Order number of the `Input Socket`
+    #     :type index: ``int``
+    #     :return: all :class:`~nodeeditor.node_node.Node` instances which are connected to the
+    #         specified `Input` or ``[]`` if there is no connection or the index is out of range
+    #     :rtype: List[:class:`~nodeeditor.node_node.Node`]
+    #     """
+    #     ins = []
+    #     for edge in self.inputs[index].edges:
+    #         other_socket = edge.getOtherSocket(self.inputs[index])
+    #         ins.append(other_socket.node)
+    #     return ins
 
-        :param index: Order number of the `Input Socket`
-        :type index: ``int``
-        :return: all :class:`~nodeeditor.node_node.Node` instances which are connected to the
-            specified `Input` or ``[]`` if there is no connection or the index is out of range
-        :rtype: List[:class:`~nodeeditor.node_node.Node`]
+    def getInputs(self) -> 'List[Node]':
+        """
+        改成了获取所有的inputs node
         """
         ins = []
-        for edge in self.inputs[index].edges:
-            other_socket = edge.getOtherSocket(self.inputs[index])
-            ins.append(other_socket.node)
+
+        try:
+            for input_socket in self.inputs:
+                if len(input_socket.edges) == 0: return None
+                connecting_edge = input_socket.edges[0]
+                other_socket = connecting_edge.getOtherSocket(input_socket)
+                ins.append(other_socket.node)
+        except Exception as e:
+            dumpException(e)
+            return None
         return ins
 
     def getOutputs(self, index: int=0) -> 'List[Node]':

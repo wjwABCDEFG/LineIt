@@ -45,13 +45,11 @@ class NodeLaunch(BaseNode):
 
         self.detailsInfo.append(group)
 
-    def evalImplementation(self, *args, **kwargs):
+    def evalOperation(self, *args):
         app_name = self.edit_app_name.text()
-        if len(args) > 0:
-            devices = [args[0], ]
-        else:
-            i1 = self.getInput(0)
-            devices = i1.value
+
+        i1 = self.getInput(0)
+        devices = i1.value
 
         for dev in devices:
             dev_mgr.launchApp(dev, app_name)

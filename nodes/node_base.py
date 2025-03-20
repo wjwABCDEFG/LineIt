@@ -73,34 +73,36 @@ class BaseNode(Node):
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
 
-    def evalOperation(self, input1, input2):
+    def evalOperation(self, *args):
         """
         需要子类实现，本来是重写evalImplementation的，但是重复固定代码太多了，又抽了一层
         input/output类还是实现evalImplementation无需实现这个
         """
-        return 123
+        return self.value
 
     def evalImplementation(self, *args, **kwargs):
-        i1 = self.getInput(0)
-        i2 = self.getInput(1)
+        """
+        原来的实现存在bug，先递归计算了父节点的eval，随后在计算evalChildren，但是父节点也进行了evalChildren，导致同一个节点会被计算n次
+        """
+        ins = self.getInputs()
 
-        if i1 is None or i2 is None:
-            self.markInvalid()
-            self.markDescendantsDirty()
-            self.grNode.setToolTip("Connect all inputs")
-            return None
+        for input_node in ins:
+            if input_node is None:
+                self.markInvalid()
+                self.markDescendantsDirty()
+                self.grNode.setToolTip("Connect all inputs")
+                return None
 
-        else:
-            val = self.evalOperation(i1.eval(), i2.eval())
-            self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
-            self.markDirty(False)
-            self.markInvalid(False)
-            self.grNode.setToolTip("")
+            else:
+                val = self.evalOperation(input_node.eval())
+                self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
+                self.markDirty(False)
+                self.markInvalid(False)
+                self.grNode.setToolTip("")
 
-            self.markDescendantsDirty()
-            self.evalChildren()
+                self.markDescendantsDirty()
 
-            return val
+                return val
 
     def eval(self, *args, **kwargs):
         """这是右键的eval操作，真正实现计算在evalImplementation"""

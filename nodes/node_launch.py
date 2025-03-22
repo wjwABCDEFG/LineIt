@@ -51,14 +51,10 @@ class NodeLaunch(BaseNode):
         i1 = self.getInput(0)
         devices = i1.value
 
+        # TODO 后续并行化调整
         for dev in devices:
             dev_mgr.launchApp(dev, app_name)
 
-        self.markDirty(False)
-        self.markInvalid(False)
-        self.grNode.setToolTip("")
-        self.markDescendantsDirty()
-        self.evalChildren()
         return self.value
 
     # 重写Graph类的serialize/deserialize方法

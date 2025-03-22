@@ -50,6 +50,7 @@ class NodeWait(BaseNode):
             float(obj)
             self.title = f"等待{obj}s"
             self.markInvalid(False)
+            self.grNode.setToolTip("时间参数必须是数字类型")
         except ValueError:
             self.markInvalid(True)
 

@@ -4,6 +4,7 @@
 @Author  : wenjiawei
 """
 import os
+import re
 import subprocess
 import time
 import traceback
@@ -11,11 +12,12 @@ from threading import Thread
 
 from pymobiledevice3 import usbmux
 
+DEBUG = False
 PLAT_ANDROID = 'Android'
 PLAT_IOS = 'iOS'
 
 
-class Helper:
+class _Helper:
     @staticmethod
     def listDevice():
         raise NotImplemented
@@ -28,31 +30,92 @@ class Helper:
     def captureScreen(deviceid, file_path: str = None):
         raise NotImplemented
 
+    @staticmethod
+    def get_memory_usage(deviceid, package_name: str = None):
+        """获取内存使用（MB）"""
+        raise NotImplemented
 
-class AndroidHelper(Helper):
+    @staticmethod
+    def get_cpu_usage(deviceid, package_name: str = None):
+        """获取CPU使用（MB）"""
+        raise NotImplemented
+
+    @staticmethod
+    def get_fps(deviceid, package_name: str = None):
+        """获取帧时间戳数据"""
+        raise NotImplemented
+
+
+class _AndroidHelper(_Helper):
     @staticmethod
     def listDevice():
         try:
-            devices_output = subprocess.run(['adb', 'devices'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            cmd = "adb devices"
+            devices_output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             devices = [line.split()[0] for line in devices_output.stdout.splitlines()[1:] if line and 'device' in line]
             return devices
-        except:
+        except subprocess.CalledProcessError:
             traceback.print_exc()
             return []
 
     @staticmethod
     def launchApp(deviceid, package_name):
-        command = f"adb -s {deviceid} shell monkey -p {package_name} -c android.intent.category.LAUNCHER 1"
-        subprocess.run(command, shell=True, check=True)
-        return True
+        try:
+            command = f"adb -s {deviceid} shell monkey -p {package_name} -c android.intent.category.LAUNCHER 1"
+            subprocess.run(command, shell=True, check=True)
+            return True
+        except subprocess.CalledProcessError:
+            traceback.print_exc()
+            return False
 
     @staticmethod
     def captureScreen(deviceid, file_path: str = None):
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        subprocess.run(['adb', 'exec-out', 'screencap', '-p'], stdout=open(file_path, 'wb'))
+        try:
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            cmd = f"adb -s {deviceid} exec-out screencap -p"
+            subprocess.run(cmd, stdout=open(file_path, 'wb'))
+        except subprocess.CalledProcessError:
+            traceback.print_exc()
+
+    @staticmethod
+    def get_memory_usage(deviceid, package_name: str = None):
+        try:
+            cmd = f"adb -s {deviceid} shell dumpsys meminfo {package_name}"
+            output = subprocess.check_output(cmd, shell=True).decode()
+            match = re.search(r'TOTAL\s+(\d+)\s+\d+\s+\d+\s+\d+', output)
+            return int(match.group(1)) / 1024 if match else 0
+        except subprocess.CalledProcessError:
+            return 0
+
+    @staticmethod
+    def get_cpu_usage(deviceid, package_name: str = None):
+        try:
+            cmd = f"adb -s {deviceid} shell pidof {package_name}"
+            pid = subprocess.check_output(cmd, shell=True).decode()
+            pid = pid.strip()
+        except subprocess.CalledProcessError as e:
+            return 0
+        try:
+            cmd = f"adb -s {deviceid} shell dumpsys cpuinfo {pid}"
+            output = subprocess.check_output(cmd, shell=True).decode()
+            match = re.search(r'(\d+%).*TOTAL', output)
+            return match.group(1) if match else '0%'
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {str(e)}")
+            return 0
+
+    @staticmethod
+    def get_fps(deviceid, package_name: str = None):
+        try:
+            cmd = f"adb -s {deviceid} shell dumpsys gfxinfo {package_name} reset"
+            output = subprocess.check_output(cmd, shell=True).decode()
+            match = re.search(r'Total frames rendered: (\d+)', output)
+            return match.group(1) if match else '0'
+        except subprocess.CalledProcessError as e:
+            return 0
 
 
-class IOSHelper(Helper):
+class _IOSHelper(_Helper):
     @staticmethod
     def listDevice():
         # TODO
@@ -76,7 +139,7 @@ class DevManager:
 
     def start_monitor(self):
         if not self._is_monitor_working:
-            print('设备监听')
+            print('开始设备监听')
             self._is_monitor_working = True
             t_ad_monitor = Thread(target=self.monitorAdDevices)
             t_ad_monitor.start()
@@ -84,13 +147,14 @@ class DevManager:
             t_ios_monitor.start()
 
     def stopMonitor(self, widget, event):
+        print('停止设备监听')
         self._is_monitor_working = False
 
     def monitorAdDevices(self):
         # 安卓设备
         last_devices = set()
         while self._is_monitor_working:
-            devices = set(AndroidHelper.listDevice())
+            devices = set(_AndroidHelper.listDevice())
 
             added_devices = devices - last_devices
             removed_devices = last_devices - devices
@@ -116,7 +180,7 @@ class DevManager:
         # ios设备
         last_devices = set()
         while self._is_monitor_working:
-            devices = set(IOSHelper.listDevice())
+            devices = set(_IOSHelper.listDevice())
 
             added_devices = devices - last_devices
             removed_devices = last_devices - devices
@@ -143,7 +207,7 @@ class DevManager:
         return PLAT_ANDROID if device_id in self.android_devs else PLAT_IOS
 
     def getHelper(self, device_id):
-        return AndroidHelper if self.getPlatform(device_id) == PLAT_ANDROID else IOSHelper
+        return _AndroidHelper if self.getPlatform(device_id) == PLAT_ANDROID else _IOSHelper
 
     def launchApp(self, deviceid, package_name: str):
         helper = self.getHelper(deviceid)
@@ -152,6 +216,27 @@ class DevManager:
     def captureScreen(self, deviceid, file_path: str = None):
         helper = self.getHelper(deviceid)
         helper.captureScreen(deviceid, file_path)
+
+    def monitor_performance(self, deviceid, package_name, interval=1, duration=60):
+        """性能监控主函数"""
+        helper = self.getHelper(deviceid)
+
+        # 获取内存数据
+        mem_usage = helper.get_memory_usage(deviceid, package_name)
+        # 获取CPU数据
+        cpu_usage = helper.get_cpu_usage(deviceid, package_name)
+        # 获取帧率数据
+        fps = helper.get_fps(deviceid, package_name)
+        # 获取时间
+        timestamp = time.strftime("%H:%M:%S", time.localtime())
+
+        DEBUG and print(f"{timestamp} - Memory: {mem_usage:.2f}MB, CPU: {cpu_usage}%, FPS: {fps}")
+        return {
+            "timestamp": timestamp,
+            "memory_mb": mem_usage,
+            "cpu_mb": cpu_usage,
+            "fps": fps
+        }
 
     # def __getattr__(self, item):
     #     helper = self.getHelper(item)

@@ -510,13 +510,13 @@ class Node(Serializable):
 
         try:
             for input_socket in self.inputs:
-                if len(input_socket.edges) == 0: return None
+                if len(input_socket.edges) == 0: return []
                 connecting_edge = input_socket.edges[0]
                 other_socket = connecting_edge.getOtherSocket(input_socket)
                 ins.append(other_socket.node)
         except Exception as e:
             dumpException(e)
-            return None
+            return []
         return ins
 
     def getOutputs(self, index: int=0) -> 'List[Node]':

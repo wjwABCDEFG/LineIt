@@ -9,7 +9,7 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from lt_dev_mgr import dev_mgr
-from nodeeditor.node_content_widget import QDMNodeContentWidget, QDMTextEdit
+from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodes.node_base import BaseNode
 
 
@@ -56,12 +56,12 @@ class NodeDevices(BaseNode):
             self.formatContent({**dev_mgr.android_devs, **dev_mgr.ios_devs})
 
         def update_list_height(self):
-            # 计算内容总高度（关键步骤2）
+            # 计算内容总高度
             total_height = 0
             for i in range(self.list_widget.count()):
                 total_height += self.list_widget.sizeHintForRow(i)
 
-            # 添加边距（根据实际样式调整）
+            # 添加边距
             margin = 2 * self.list_widget.frameWidth()  # 上下边框
             self.list_widget.setFixedHeight(total_height + margin)
             self.height = total_height + margin
@@ -74,7 +74,6 @@ class NodeDevices(BaseNode):
                 self.list_widget.addItem(item)
             if len(data.values()) == 0:
                 self.list_widget.addItem('NoDevices')
-            # self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             self.update_list_height()
 
     NodeContent_class = NodeDevicesOutputContent

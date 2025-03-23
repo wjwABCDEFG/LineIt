@@ -23,6 +23,10 @@ class _Helper:
         raise NotImplemented
 
     @staticmethod
+    def installApp(deviceid, package_name: str):
+        raise NotImplemented
+
+    @staticmethod
     def launchApp(deviceid, package_name: str):
         raise NotImplemented
 
@@ -57,6 +61,16 @@ class _AndroidHelper(_Helper):
         except subprocess.CalledProcessError:
             traceback.print_exc()
             return []
+
+    @staticmethod
+    def installApp(deviceid, apk):
+        try:
+            command = f"adb -s {deviceid} install -r {apk}"
+            subprocess.run(command, shell=True, check=True)
+            return True
+        except subprocess.CalledProcessError:
+            traceback.print_exc()
+            return False
 
     @staticmethod
     def launchApp(deviceid, package_name):
@@ -208,6 +222,10 @@ class DevManager:
 
     def getHelper(self, device_id):
         return _AndroidHelper if self.getPlatform(device_id) == PLAT_ANDROID else _IOSHelper
+
+    def installApp(self, deviceid, package_name: str):
+        helper = self.getHelper(deviceid)
+        helper.installApp(deviceid, package_name)
 
     def launchApp(self, deviceid, package_name: str):
         helper = self.getHelper(deviceid)

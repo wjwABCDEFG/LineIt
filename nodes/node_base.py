@@ -86,6 +86,12 @@ class BaseNode(Node):
         """
         ins = self.getInputs()
 
+        if not ins:
+            self.markInvalid()
+            self.markDescendantsDirty()
+            self.grNode.setToolTip("Connect all inputs")
+            return None
+
         for input_node in ins:
             if input_node is None:
                 self.markInvalid()

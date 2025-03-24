@@ -180,7 +180,7 @@ class LineItWindow(NodeEditorWindow):
                 self.detailsDockWidget.showDetailInfo([])
             else:
                 for gr_node in select_nodes:
-                    if hasattr(gr_node.node, 'detailsInfo') and gr_node.node.detailsInfo:
+                    if hasattr(gr_node, 'node') and hasattr(gr_node.node, 'detailsInfo') and gr_node.node.detailsInfo:
                         self.detailsDockWidget.showDetailInfo(gr_node.node.detailsInfo)
         except Exception as e: dumpException(e)
 

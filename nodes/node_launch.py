@@ -16,7 +16,7 @@ from nodes.node_base import BaseNode
 
 @register_node("LAUNCH_APP")
 class NodeLaunch(BaseNode):
-    icon = "icons/install.png"
+    icon = "icons/launch.png"
     op_code = "LAUNCH_APP"
     op_title = "打开应用"
     content_label_objname = "node_launch"   # 这是样式qss名称

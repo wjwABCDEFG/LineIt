@@ -16,7 +16,7 @@ from nodes.node_base import BaseNode
 
 @register_node("INSTALL_APP")
 class NodeInstall(BaseNode):
-    icon = "icons/launch.png"
+    icon = "icons/install.png"
     op_code = "INSTALL_APP"
     op_title = "安装应用"
     content_label_objname = "node_install"   # 这是样式qss名称

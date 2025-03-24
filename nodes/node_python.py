@@ -14,12 +14,11 @@ from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
 
 
-@register_node("LAUNCH_APP")
-class NodeLaunch(BaseNode):
-    icon = "icons/launch.png"
-    op_code = "LAUNCH_APP"
-    op_title = "打开应用"
-    content_label_objname = "node_launch"   # 这是样式qss名称
+@register_node("PYTHON")
+class NodePython(BaseNode):
+    icon = "icons/python.png"
+    op_code = "PYTHON"
+    op_title = "Python"
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
         super().__init__(scene, inputs, outputs)
@@ -29,32 +28,19 @@ class NodeLaunch(BaseNode):
     def createDetailsInfo(self):
         self.detailsInfo = []
 
-        group = QGroupBox('Params')
-        group_layout = QVBoxLayout()
+        group = QGroupBox('PythonCode')
+        group_layout = QVBoxLayout(group)
 
-        # app包名行
-        app_layout = QHBoxLayout()
-        label = QLabel("App包名")
-        label.setAlignment(Qt.AlignRight)  # 设置右对齐
-        self.edit_app_name = QLineEdit()
-        app_layout.addWidget(label)
-        app_layout.addWidget(self.edit_app_name)
-        group_layout.addLayout(app_layout)
-
-        group.setLayout(group_layout)
+        self.ui_code = QPlainTextEdit()
+        self.ui_code.setObjectName("myTextEdit")
+        self.ui_code.setStyleSheet("QPlainTextEdit { color: white; }")
+        group_layout.addWidget(self.ui_code)
 
         self.detailsInfo.append(group)
 
     def evalOperation(self, *args):
-        app_name = self.edit_app_name.text()
-
-        i1 = self.getInput(0)
-        devices = i1.value
-
-        # TODO 后续并行化调整
-        for dev in devices:
-            dev_mgr.launchApp(dev, app_name)
-
+        code = self.ui_code.toPlainText()
+        exec(code)
         return self.value
 
     # 重写Graph类的serialize/deserialize方法
@@ -65,14 +51,14 @@ class NodeLaunch(BaseNode):
 
         def serialize(self):
             res = super().serialize()
-            res['value'] = self.node.edit_app_name.text()
+            res['value'] = self.node.ui_code.toPlainText()
             return res
 
         def deserialize(self, data, hashmap={}):
             res = super().deserialize(data, hashmap)
             try:
                 value = data['value']
-                self.node.edit_app_name.setText(value)
+                self.node.ui_code.setPlainText(value)
                 return True & res
             except Exception as e:
                 dumpException(e)

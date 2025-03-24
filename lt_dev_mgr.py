@@ -160,7 +160,7 @@ class DevManager:
             t_ios_monitor = Thread(target=self.monitorIOSDevices)
             t_ios_monitor.start()
 
-    def stopMonitor(self, widget, event):
+    def stopMonitor(self):
         print('停止设备监听')
         self._is_monitor_working = False
 

@@ -22,7 +22,6 @@ class NodeDevices(BaseNode):
 
     def __init__(self, scene):
         super().__init__(scene, inputs=[])
-        self.scene.editor.addCloseEventListener(dev_mgr.stopMonitor)  # monitor线程需要手动结束否则程序无法正常关闭
         dev_mgr.addDevChangedEventListener(self.onChanged)
         self.markDirty(False)
         self.markInvalid(False)

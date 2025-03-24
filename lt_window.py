@@ -10,6 +10,7 @@ from PySide6.QtGui import QIcon, QAction, QKeySequence
 from PySide6.QtWidgets import *
 
 from lt_details_dock import LineItDetailsDock
+from lt_dev_mgr import dev_mgr
 from lt_nodes_list import LineItNodesList
 from lt_sub_window import LineItSubWindow
 from nodeeditor.utils import loadStylesheets
@@ -62,6 +63,7 @@ class LineItWindow(NodeEditorWindow):
 
     def closeEvent(self, event):
         self.mdiArea.closeAllSubWindows()
+        dev_mgr.stopMonitor()  # monitor线程需要手动结束否则程序无法正常关闭
         if self.mdiArea.currentSubWindow():
             event.ignore()
         else:

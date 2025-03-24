@@ -93,22 +93,15 @@ class BaseNode(Node):
             return None
 
         for input_node in ins:
-            if input_node is None:
-                self.markInvalid()
-                self.markDescendantsDirty()
-                self.grNode.setToolTip("Connect all inputs")
-                return None
+            val = self.evalOperation(input_node.eval())
+            self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
+            self.markDirty(False)
+            self.markInvalid(False)
+            self.grNode.setToolTip("")
 
-            else:
-                val = self.evalOperation(input_node.eval())
-                self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
-                self.markDirty(False)
-                self.markInvalid(False)
-                self.grNode.setToolTip("")
+            self.markDescendantsDirty()
 
-                self.markDescendantsDirty()
-
-                return val
+            return val
 
     def eval(self, *args, **kwargs):
         """这是右键的eval操作，真正实现计算在evalImplementation"""

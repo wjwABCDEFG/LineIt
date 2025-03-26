@@ -24,7 +24,6 @@ class NodeWait(BaseNode):
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
         super().__init__(scene, inputs, outputs)
-        self.createDetailsInfo()
 
     def createDetailsInfo(self):
         self.detailsInfo = []

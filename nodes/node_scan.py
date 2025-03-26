@@ -23,10 +23,9 @@ class NodeScan(BaseNode):
     op_title = "所有文件"
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
-        super().__init__(scene, inputs, outputs)
         self.ui_ext = None
         self.ui_path = None
-        self.createDetailsInfo()
+        super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
         self.detailsInfo = []

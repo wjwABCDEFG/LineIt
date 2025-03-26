@@ -23,11 +23,10 @@ class NodeRename(BaseNode):
     op_title = "序列化重命名"
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
-        super().__init__(scene, inputs, outputs)
         self.ui_align0 = None
         self.ui_fmt = None
         self.ui_prefix = None
-        self.createDetailsInfo()
+        super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
         self.detailsInfo = []

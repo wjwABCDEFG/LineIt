@@ -20,9 +20,8 @@ class NodeStore(BaseNode):
     content_label_objname = "node_launch"   # 这是样式qss名称
 
     def __init__(self, scene):
-        super().__init__(scene, inputs=[1], outputs=[])
         self.ui_label = None
-        self.createDetailsInfo()
+        super().__init__(scene, inputs=[1], outputs=[])
 
     def createDetailsInfo(self):
         self.detailsInfo = []

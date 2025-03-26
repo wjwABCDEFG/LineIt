@@ -21,9 +21,8 @@ class NodePython(BaseNode):
     op_title = "Python"
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
-        super().__init__(scene, inputs, outputs)
         self.edit_app_name = None
-        self.createDetailsInfo()
+        super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
         self.detailsInfo = []

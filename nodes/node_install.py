@@ -22,9 +22,8 @@ class NodeInstall(BaseNode):
     content_label_objname = "node_install"   # 这是样式qss名称
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
-        super().__init__(scene, inputs, outputs)
         self.edit_text = None
-        self.createDetailsInfo()
+        super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
         self.detailsInfo = []

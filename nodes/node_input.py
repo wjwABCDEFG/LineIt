@@ -16,7 +16,6 @@ class CalcNode_Input(BaseNode):
 
     def __init__(self, scene):
         super().__init__(scene, inputs=[], outputs=[3])
-        self.eval()
 
     def evalImplementation(self):
         self.markDirty(False)

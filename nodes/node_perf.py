@@ -22,22 +22,39 @@ class NodePerf(BaseNode):
     content_label_objname = "node_perf"   # 这是样式qss名称
 
     def __init__(self, scene):
+        self.ui_package_name = None
         super().__init__(scene, inputs=[1], outputs=[1])
-        self.package_name = "com.netease.cloudmusic"
+
+    def createDetailsInfo(self):
+        self.detailsInfo = []
+
+        group = QGroupBox('Params')
+        group_layout = QVBoxLayout(group)
+
+        # 包名行
+        line_layout = QHBoxLayout()
+        label = QLabel("包名")
+        self.ui_package_name = QLineEdit()
+        line_layout.addWidget(label)
+        line_layout.addWidget(self.ui_package_name)
+        group_layout.addLayout(line_layout)
+
+        self.detailsInfo.append(group)
 
     def evalOperation(self, *args):
         devices = self.getInput(0).value
+        package_name = self.ui_package_name.text()
 
         # TODO 后续并行化调整
         for dev in devices:
-            chart = PerfChart(dev, self.package_name)
+            chart = PerfChart(dev, package_name)
             chart.setTitle("FPS帧率")
             chart.legend().hide()
             chart.setAnimationOptions(QChart.AnimationOption.AllAnimations)
             chart_view = QChartView(chart)
             chart_view.setRenderHint(QPainter.RenderHint.Antialiasing)
             self.new_window = QWidget()
-            self.new_window.setWindowTitle(f'{dev}-{self.package_name}')
+            self.new_window.setWindowTitle(f'{dev}-{package_name}')
             self.new_window.setGeometry(200, 200, 500, 400)
             layout = QVBoxLayout(self.new_window)
             layout.addWidget(chart_view)

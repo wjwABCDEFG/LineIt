@@ -61,7 +61,7 @@ class BaseNode(Node):
 
         self.value = None       # 用于存储当前节点计算结果
         self.detailsInfo = []   # details面板显示的信息，必须是list[QWidget]
-
+        self.createDetailsInfo()
         self.markDirty()        # 一开始是dirty的，因为dirty才可以允许eval
 
     def initInnerClasses(self):     # AAA
@@ -72,6 +72,9 @@ class BaseNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+    def createDetailsInfo(self):
+        pass
 
     def evalOperation(self, *args):
         """
@@ -87,24 +90,37 @@ class BaseNode(Node):
         ins = self.getInputs()
 
         if not ins:
+            # 如果这里发现连接有问题，把后续所有节点都置为dirty
             self.markInvalid()
             self.markDescendantsDirty()
             self.grNode.setToolTip("Connect all inputs")
             return None
 
+        input_vals = []
         for input_node in ins:
-            val = self.evalOperation(input_node.eval())
+            input_vals.append(input_node.eval())
+            if not self.isDirty() and not self.isInvalid():
+                # 这里要再判断一次，原来的代码只在eval判断，有问题，流程上是:
+                # eval/Implementation->evalInput(父节点)->evalOperation(本节点)->evalChildren(子节点)
+                # 但是在evalInput的时候，内部又会出发对当前节点的evalOperation，此时还没有值，执行了一次evalOperation
+                # 调用栈跳回来后，此时本节点已经计算过，但又已经过了eval的检查，就会再执行一次
+                # 因此如果不在这里判断，那么会执行多次
+                # 修改后的流程为:
+                # eval/Implementation->evalInput(父节点)->再次判断->evalOperation(本节点)->evalChildren(子节点)
+                return self.value
+            val = self.evalOperation(input_vals)
             self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
             self.markDirty(False)
             self.markInvalid(False)
             self.grNode.setToolTip("")
 
-            self.markDescendantsDirty()
+            # self.markDescendantsDirty()
+            self.evalChildren()
 
             return val
 
     def eval(self, *args, **kwargs):
-        """这是右键的eval操作，真正实现计算在evalImplementation"""
+        """这里只是一些是否执行和执行异常判断，真正实现计算在evalImplementation"""
         if not self.isDirty() and not self.isInvalid():
             if DEBUG: print(" _> returning cached %s value:" % self.__class__.__name__, self.value)   # 如果已经是√状态就不再计算了，拿缓存
             return self.value

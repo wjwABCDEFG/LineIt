@@ -96,7 +96,7 @@ class QDMGraphicsNode(QGraphicsItem):
         self._pen_selected.setWidthF(self.pen_width)
         self._pen_hovered = QPen(self._color_hovered)
         self._pen_hovered.setWidthF(self.pen_width + 1)
-        #
+
         self._brush_title = QBrush(QColor("#FF313131"))
         self._brush_background = QBrush(QColor("#E3212121"))
 

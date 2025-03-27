@@ -310,7 +310,6 @@ class Edge(Serializable):
 
         except Exception as e: dumpException(e)
 
-
     def serialize(self) -> OrderedDict:
         return OrderedDict([
             ('id', self.id),

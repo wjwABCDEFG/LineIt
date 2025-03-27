@@ -434,7 +434,6 @@ class Scene(Serializable):
 
         # go through deserialized edges:
         for edge_data in data['edges']:
-            Edge(self).deserialize(edge_data, hashmap, restore_id)
             # can we find this node in the scene?
             found = False
             for edge in all_edges:
@@ -443,7 +442,7 @@ class Scene(Serializable):
                     break
 
             if not found:
-                new_edge = Edge(self).deserialize(edge_data, hashmap, restore_id, *args, **kwargs)
+                new_edge = self.getEdgeClass()(self).deserialize(edge_data, hashmap, restore_id, *args, **kwargs)
                 # print("New edge for", edge_data)
             else:
                 found.deserialize(edge_data, hashmap, restore_id, *args, **kwargs)

@@ -20,17 +20,8 @@ class NodeCapture(BaseNode):
     def __init__(self, scene):
         super().__init__(scene, inputs=[1, ])
 
-    def evalImplementation(self, *args, **kwargs):
-        if len(args) > 0:
-            devices = [args[0], ]
-        else:
-            devices = dev_mgr.android_devs
-        for dev in devices:
-            dev_mgr.captureScreen(dev, f'./cache/screen_cap/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
-
-        self.markDirty(False)
-        self.markInvalid(False)
+    def evalOperation(self, *args):
+        dev = self.getInput(0).value
+        dev_mgr.captureScreen(dev, f'./cache/screen_cap/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
         self.grNode.setToolTip("capture success")
-        self.markDescendantsDirty()
-        self.evalChildren()
         return self.value

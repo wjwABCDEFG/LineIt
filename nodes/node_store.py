@@ -17,7 +17,6 @@ class NodeStore(BaseNode):
     icon = "icons/store.png"
     op_code = "STORE"
     op_title = "Store"
-    content_label_objname = "node_launch"   # 这是样式qss名称
 
     def __init__(self, scene):
         self.ui_label = None

@@ -3,6 +3,8 @@
 @Time    : 2024/12/30 23:36
 @Author  : wenjiawei
 """
+from multiprocessing import Process
+from threading import Thread
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import *
@@ -23,9 +25,8 @@ class NodeDevices(BaseNode):
     def __init__(self, scene):
         super().__init__(scene, inputs=[])
         dev_mgr.addDevChangedEventListener(self.onChanged)
-        self.markDirty(False)
-        self.markInvalid(False)
         self.onChanged(None)        # 一开始先来一次
+        self.process_list = []
 
     def onChanged(self, obj):
         val = {**dev_mgr.android_devs, **dev_mgr.ios_devs}
@@ -37,7 +38,12 @@ class NodeDevices(BaseNode):
         self.markDirty(False)
         self.markInvalid(False)
         self.grNode.setToolTip("")
-        self.markDescendantsDirty()
+        for dev in self.value:
+            self.markDescendantsDirty()
+            t = Thread(target=self.evalChildren, args=(dev, ))
+            self.process_list.append(t)
+            t.start()
+            t.join()
         return self.value
 
     class NodeDevicesOutputContent(QDMNodeContentWidget):

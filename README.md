@@ -54,7 +54,7 @@
 
 如果想阅读代码细节或者详细设计，可以阅读这篇文章
 
-https://wjw.today/Others/node-editor.md/
+https://wjw.today/Others/line-it-node-editor/
 
 
 

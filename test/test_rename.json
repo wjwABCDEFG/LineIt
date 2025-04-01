@@ -1,0 +1,101 @@
+{
+    "id": 1856765132512,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 1856765428640,
+            "title": "Input",
+            "pos_x": -372.0,
+            "pos_y": -256.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 1856765132080,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 3
+                }
+            ],
+            "content": {},
+            "op_code": "INPUT"
+        },
+        {
+            "id": 1856765130544,
+            "title": "\u6240\u6709\u6587\u4ef6",
+            "pos_x": -145.0,
+            "pos_y": -181.0,
+            "inputs": [
+                {
+                    "id": 1856765131024,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1856765132464,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": {
+                    "file_path": "C:\\Users\\wen\\Desktop\\tiger_rc",
+                    "ext": "jpg"
+                }
+            },
+            "op_code": "SCAN_FILE"
+        },
+        {
+            "id": 2266191001488,
+            "title": "\u6279\u91cf\u91cd\u547d\u540d",
+            "pos_x": 79.0,
+            "pos_y": -143.0,
+            "inputs": [
+                {
+                    "id": 2266191001200,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2266191001728,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": {
+                    "prefix": "tiger",
+                    "fmt": "_"
+                }
+            },
+            "op_code": "RENAME"
+        }
+    ],
+    "edges": [
+        {
+            "id": 2087789684976,
+            "edge_type": 2,
+            "start": 1856765132080,
+            "end": 1856765131024
+        },
+        {
+            "id": 2087789686080,
+            "edge_type": 2,
+            "start": 1856765132464,
+            "end": 2266191001200
+        }
+    ]
+}

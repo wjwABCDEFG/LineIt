@@ -1,0 +1,61 @@
+{
+    "id": 1605249199280,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 1605249199472,
+            "title": "Python",
+            "pos_x": -116.0,
+            "pos_y": -170.0,
+            "inputs": [
+                {
+                    "id": 1605249200960,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1605249200480,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": "import os\na = os.listdir()\nprint(a)"
+            },
+            "op_code": "PYTHON"
+        },
+        {
+            "id": 1605249200624,
+            "title": "Input",
+            "pos_x": -356.0,
+            "pos_y": -200.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 1605249198512,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 3
+                }
+            ],
+            "content": {},
+            "op_code": "INPUT"
+        }
+    ],
+    "edges": [
+        {
+            "id": 1605249199568,
+            "edge_type": 2,
+            "start": 1605249198512,
+            "end": 1605249200960
+        }
+    ]
+}

@@ -1,0 +1,93 @@
+{
+    "id": 1841835914384,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 1841837180096,
+            "title": "\u8bbe\u5907\u5217\u8868",
+            "pos_x": -256.0,
+            "pos_y": -185.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 1841837180000,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {},
+            "op_code": "FIND_DEVICE"
+        },
+        {
+            "id": 1841836523232,
+            "title": "\u6253\u5f00\u5e94\u7528",
+            "pos_x": 140.0,
+            "pos_y": -113.0,
+            "inputs": [
+                {
+                    "id": 1841830040176,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1841837179904,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": "com.android.mms"
+            },
+            "op_code": "LAUNCH_APP"
+        },
+        {
+            "id": 2910560233328,
+            "title": "Arg2Val",
+            "pos_x": -60.0,
+            "pos_y": -141.0,
+            "inputs": [
+                {
+                    "id": 2910560331104,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2910560325344,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 2
+                }
+            ],
+            "content": {},
+            "op_code": "Arg2Val"
+        }
+    ],
+    "edges": [
+        {
+            "id": 2910560328176,
+            "edge_type": 2,
+            "start": 1841837180000,
+            "end": 2910560331104
+        },
+        {
+            "id": 2910560337008,
+            "edge_type": 2,
+            "start": 2910560325344,
+            "end": 1841830040176
+        }
+    ]
+}

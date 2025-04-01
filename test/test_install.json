@@ -1,0 +1,93 @@
+{
+    "id": 2733872891744,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 2733874113904,
+            "title": "\u8bbe\u5907\u5217\u8868",
+            "pos_x": -319.0,
+            "pos_y": -177.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 2733874114192,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {},
+            "op_code": "FIND_DEVICE"
+        },
+        {
+            "id": 2733874113856,
+            "title": "\u5b89\u88c5\u5e94\u7528",
+            "pos_x": 88.0,
+            "pos_y": -107.0,
+            "inputs": [
+                {
+                    "id": 2733874114720,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2733874115056,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": "D:\\LineIt\\Magisk-v26.1.apk"
+            },
+            "op_code": "INSTALL_APP"
+        },
+        {
+            "id": 2910545393360,
+            "title": "Arg2Val",
+            "pos_x": -119.0,
+            "pos_y": -135.0,
+            "inputs": [
+                {
+                    "id": 2910546027104,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2910546025328,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 2
+                }
+            ],
+            "content": {},
+            "op_code": "Arg2Val"
+        }
+    ],
+    "edges": [
+        {
+            "id": 2910543074672,
+            "edge_type": 2,
+            "start": 2733874114192,
+            "end": 2910546027104
+        },
+        {
+            "id": 2910546024704,
+            "edge_type": 2,
+            "start": 2910546025328,
+            "end": 2733874114720
+        }
+    ]
+}

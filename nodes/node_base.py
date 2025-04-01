@@ -74,7 +74,7 @@ class BaseNode(Node):
         self.output_socket_position = RIGHT_CENTER
 
     def createDetailsInfo(self):
-        pass
+        self.detailsInfo = []       # 一般都是需要先清空一次
 
     def evalOperation(self, *args):
         """
@@ -86,6 +86,8 @@ class BaseNode(Node):
     def evalImplementation(self, *args, **kwargs):
         """
         原来的实现存在bug，先递归计算了父节点的eval，随后在计算evalChildren，但是父节点也进行了evalChildren，导致同一个节点会被计算n次
+        如果设计成往前计算又会导致分叉无法计算
+        这里设计成线往前找到顶，再执行evalChildren
         """
         ins = self.getInputs()
 

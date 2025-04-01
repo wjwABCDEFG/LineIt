@@ -1,0 +1,93 @@
+{
+    "id": 1917699899296,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 1915721510112,
+            "title": "\u8bbe\u5907\u5217\u8868",
+            "pos_x": -217.0,
+            "pos_y": -143.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 1915721509824,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {},
+            "op_code": "FIND_DEVICE"
+        },
+        {
+            "id": 1915697948336,
+            "title": "\u6027\u80fd\u6570\u636e",
+            "pos_x": 189.0,
+            "pos_y": -72.0,
+            "inputs": [
+                {
+                    "id": 1915721510400,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 1915721509680,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 1
+                }
+            ],
+            "content": {
+                "value": "com.netease.cloudmusic"
+            },
+            "op_code": "PERF"
+        },
+        {
+            "id": 2295435061344,
+            "title": "Arg2Val",
+            "pos_x": -8.0,
+            "pos_y": -112.0,
+            "inputs": [
+                {
+                    "id": 2295435061104,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 2,
+                    "socket_type": 1
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2295435061152,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 5,
+                    "socket_type": 2
+                }
+            ],
+            "content": {},
+            "op_code": "Arg2Val"
+        }
+    ],
+    "edges": [
+        {
+            "id": 2295435061584,
+            "edge_type": 2,
+            "start": 1915721509824,
+            "end": 2295435061104
+        },
+        {
+            "id": 2295435060672,
+            "edge_type": 2,
+            "start": 2295435061152,
+            "end": 1915721510400
+        }
+    ]
+}

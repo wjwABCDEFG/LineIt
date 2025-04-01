@@ -97,7 +97,7 @@ class _AndroidHelper(_Helper):
             cmd = f"adb -s {deviceid} shell dumpsys meminfo {package_name}"
             output = subprocess.check_output(cmd, shell=True).decode()
             match = re.search(r'TOTAL\s+(\d+)\s+\d+\s+\d+\s+\d+', output)
-            return int(match.group(1)) / 1024 if match else 0
+            return int(int(match.group(1)) / 1024) if match else 0
         except subprocess.CalledProcessError:
             return 0
 
@@ -112,8 +112,8 @@ class _AndroidHelper(_Helper):
         try:
             cmd = f"adb -s {deviceid} shell dumpsys cpuinfo {pid}"
             output = subprocess.check_output(cmd, shell=True).decode()
-            match = re.search(r'(\d+%).*TOTAL', output)
-            return match.group(1) if match else '0%'
+            match = re.search(r'(\d+)%.*TOTAL', output)
+            return int(match.group(1)) if match else 0
         except subprocess.CalledProcessError as e:
             print(f"Error: {str(e)}")
             return 0
@@ -235,10 +235,14 @@ class DevManager:
         helper = self.getHelper(deviceid)
         helper.captureScreen(deviceid, file_path)
 
-    def monitor_performance(self, deviceid, package_name, interval=1, duration=60):
+    def clear_fps(self, deviceid, package_name):
+        # 清空一次帧率数据
+        helper = self.getHelper(deviceid)
+        helper.get_fps(deviceid, package_name)
+
+    def monitor_performance(self, deviceid, package_name):
         """性能监控主函数"""
         helper = self.getHelper(deviceid)
-
         # 获取内存数据
         mem_usage = helper.get_memory_usage(deviceid, package_name)
         # 获取CPU数据
@@ -248,11 +252,11 @@ class DevManager:
         # 获取时间
         timestamp = time.strftime("%H:%M:%S", time.localtime())
 
-        DEBUG and print(f"{timestamp} - Memory: {mem_usage:.2f}MB, CPU: {cpu_usage}%, FPS: {fps}")
+        DEBUG and print(f"{timestamp} - Memory: {mem_usage}MB, CPU: {cpu_usage}%, FPS: {fps}")
         return {
             "timestamp": timestamp,
             "memory_mb": mem_usage,
-            "cpu_mb": cpu_usage,
+            "cpu_percent": cpu_usage,
             "fps": fps
         }
 

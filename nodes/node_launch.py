@@ -49,8 +49,7 @@ class NodeLaunch(BaseNode):
 
         dev = self.getInput(0).value
         dev_mgr.launchApp(dev, app_name)
-        self.value = dev
-        return self.value
+        return dev
 
     # 重写Graph类的serialize/deserialize方法
     class NodeInputContent(QDMNodeContentWidget):

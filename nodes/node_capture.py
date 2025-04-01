@@ -24,4 +24,4 @@ class NodeCapture(BaseNode):
         dev = self.getInput(0).value
         dev_mgr.captureScreen(dev, f'./cache/screen_cap/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
         self.grNode.setToolTip("capture success")
-        return self.value
+        return dev

@@ -30,7 +30,10 @@ class NodeArg2Val(BaseNode):
             return None
         input_node.eval()     # 从这里进去，但是其实并不用这里的val值，而是用的父节点传下来的args
         if not self.isDirty() and not self.isInvalid():
-            print(f'{self.value} 不用执行啦')
+            # print(f'{self.value} 不用执行啦')
+            return self.value
+        if not args:
+            print('no args')
             return self.value
         self.value = args[0]
         self.markDirty(False)

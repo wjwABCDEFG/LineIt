@@ -11,6 +11,8 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from lt_dev_mgr import dev_mgr
+from nodeeditor.node_content_widget import QDMNodeContentWidget
+from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
 
 
@@ -22,6 +24,7 @@ class NodePerf(BaseNode):
     content_label_objname = "node_perf"   # 这是样式qss名称
 
     def __init__(self, scene):
+        self.new_window = PerfWidget()
         self.ui_package_name = None
         super().__init__(scene, inputs=[1], outputs=[1])
 
@@ -42,29 +45,102 @@ class NodePerf(BaseNode):
         self.detailsInfo.append(group)
 
     def evalOperation(self, *args):
-        devices = self.getInput(0).value
+        dev_id = self.getInput(0).value
         package_name = self.ui_package_name.text()
+        self.new_window.setCollectInfo(dev_id, package_name)
+        self.new_window.start_collection()
+        return dev_id
 
-        # TODO 后续并行化调整
-        for dev in devices:
-            chart = PerfChart(dev, package_name)
-            chart.setTitle("FPS帧率")
+    # 重写Graph类的serialize/deserialize方法
+    class NodeInputContent(QDMNodeContentWidget):
+
+        def initUI(self):
+            pass
+
+        def serialize(self):
+            res = super().serialize()
+            res['value'] = self.node.ui_package_name.text()
+            return res
+
+        def deserialize(self, data, hashmap={}):
+            res = super().deserialize(data, hashmap)
+            try:
+                value = data['value']
+                self.node.ui_package_name.setText(value)
+                return True & res
+            except Exception as e:
+                dumpException(e)
+            return res
+
+    NodeContent_class = NodeInputContent
+
+
+class PerfWidget(QWidget):
+    """
+    多个chart的容器，每个PerfWidget对应一个设备的监控线程
+    """
+    chart_show = Signal(object)
+    title_update = Signal(str)
+
+    def __init__(self, dev_id='', package_name='', parent=None):
+        super().__init__(parent)
+        self.dev_id = dev_id
+        self.package_name = package_name
+
+        self.indicators = ['fps', 'memory_mb', 'cpu_percent']   # 性能指标
+        self.indicators_range = [(0, 200), (0, 1024), (0, 100)]
+        self.collector_thread = None
+
+        self._layout = QVBoxLayout(self)
+        self.setGeometry(0, 0, 500, 900)
+        self.charts = {}
+        self.setWindowTitle(f'{dev_id}-{package_name}')
+        self.addCharts()
+        self.show()
+
+        self.title_update.connect(self.updateTitle)
+
+    def updateTitle(self, title):
+        self.setWindowTitle(title)
+
+    def setCollectInfo(self, dev_id, package_name):
+        self.dev_id = dev_id
+        self.package_name = package_name
+        self.title_update.emit(f'{dev_id}-{package_name}')
+
+    def addCharts(self):
+        for indicator in self.indicators:
+            chart = PerfChart(indicator)
+            chart.setTitle(indicator)
             chart.legend().hide()
             chart.setAnimationOptions(QChart.AnimationOption.AllAnimations)
             chart_view = QChartView(chart)
             chart_view.setRenderHint(QPainter.RenderHint.Antialiasing)
-            self.new_window = QWidget()
-            self.new_window.setWindowTitle(f'{dev}-{package_name}')
-            self.new_window.setGeometry(200, 200, 500, 400)
-            layout = QVBoxLayout(self.new_window)
-            layout.addWidget(chart_view)
-            self.new_window.show()
+            self._layout.addWidget(chart_view)
+            self.charts[indicator] = chart
 
-        return self.value
+    def updateCharts(self, data: dict):
+        for indicator, val in data.items():
+            if indicator == 'timestamp':
+                continue
+            chart = self.charts[indicator]
+            chart.handleTimeout(val)
+
+    def start_collection(self):
+        # 子线程开始收集数据
+        self.collector_thread = DataCollectorThread(self.dev_id, self.package_name)
+        self.collector_thread.data_ready.connect(self.updateCharts)
+        if not self.collector_thread.isRunning():
+            self.collector_thread.start()
+
+    def closeEvent(self, event):
+        # 关闭窗口时停止线程
+        self.collector_thread.stop()
+        event.accept()
 
 
 class PerfChart(QChart):
-    def __init__(self, dev_id, package_name, parent=None):
+    def __init__(self, indicator, parent=None):
         super().__init__(QChart.ChartTypeCartesian, parent, Qt.WindowFlags())
         self._timer = QTimer()
         self._series = QSplineSeries(self)
@@ -73,13 +149,12 @@ class PerfChart(QChart):
         self._axisY = QValueAxis()
         self._x = 0
         self._y = 0
-        self.dev_id = dev_id
-        self.package_name = package_name
+        self.indicator = indicator  # fps/cpu/memory
         self.data = []
 
-        green = QPen(Qt.red)
-        green.setWidth(3)
-        self._series.setPen(green)
+        red = QPen(Qt.red)
+        red.setWidth(3)
+        self._series.setPen(red)
         self._series.append(self._x, self._y)
 
         self.addSeries(self._series)
@@ -90,30 +165,17 @@ class PerfChart(QChart):
         self._series.attachAxis(self._axisY)
         self._axisX.setTickCount(5)
         self._axisX.setRange(-5, 5)
-        self._axisY.setRange(0, 300)
+        self._axisY.setRange(0, 100)
 
-        # 创建子线程收集数据
-        self.collector_thread = DataCollectorThread(dev_id, package_name)
-        self.collector_thread.data_ready.connect(self.handleTimeout)
-        self.start_collection()
-
-    def handleTimeout(self, data):
+    def handleTimeout(self, data: int | float):
+        self.data.append(data)
+        self._axisY.setRange(int(min(self.data[-5:])) - 1, int(max(self.data[-5:])) + 1)
         x = self.plotArea().width() / self._axisX.tickCount()
         y = (self._axisX.max() - self._axisX.min()) / self._axisX.tickCount()
-        self.data.append(data)
         self._x += y
-        self._y = min(float(data['fps']), 300)
+        self._y = float(data)
         self._series.append(self._x, self._y)
         self.scroll(x, 0)
-
-    def start_collection(self):
-        if not self.collector_thread.isRunning():
-            self.collector_thread.start()
-
-    def closeEvent(self, event):
-        # 关闭窗口时停止线程
-        self.collector_thread.stop()
-        event.accept()
 
 
 class DataCollectorThread(QThread):
@@ -126,10 +188,11 @@ class DataCollectorThread(QThread):
         self._is_running = True
 
     def run(self):
+        dev_mgr.clear_fps(self.dev_id, self.package_name)
         while self._is_running:
+            self.msleep(1000)
             data = dev_mgr.monitor_performance(self.dev_id, self.package_name)
             self.data_ready.emit(data)
-            self.msleep(1000)
 
     def stop(self):
         self._is_running = False

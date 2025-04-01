@@ -45,15 +45,9 @@ class NodeInstall(BaseNode):
 
     def evalOperation(self, *args):
         app_name = self.edit_text.text()
-
-        i1 = self.getInput(0)
-        devices = i1.value
-
-        # TODO 后续并行化调整
-        for dev in devices:
-            dev_mgr.installApp(dev, app_name)
-
-        return self.value
+        dev = self.getInput(0).value
+        dev_mgr.installApp(dev, app_name)
+        return dev
 
     # 重写Graph类的serialize/deserialize方法
     class NodeInputContent(QDMNodeContentWidget):

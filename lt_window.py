@@ -177,14 +177,14 @@ class LineItWindow(NodeEditorWindow):
         except Exception as e: dumpException(e)
 
     def updateDetailsDock(self, select_nodes):
-        try:
-            if not select_nodes:
-                self.detailsDockWidget.showDetailInfo([])
+        if len(select_nodes) != 1:
+            self.detailsDockWidget.showDetailInfo([])
+        else:
+            gr_node = select_nodes[0]
+            if hasattr(gr_node, 'node') and hasattr(gr_node.node, 'detailsInfo') and gr_node.node.detailsInfo:
+                self.detailsDockWidget.showDetailInfo(gr_node.node.detailsInfo)
             else:
-                for gr_node in select_nodes:
-                    if hasattr(gr_node, 'node') and hasattr(gr_node.node, 'detailsInfo') and gr_node.node.detailsInfo:
-                        self.detailsDockWidget.showDetailInfo(gr_node.node.detailsInfo)
-        except Exception as e: dumpException(e)
+                self.detailsDockWidget.showDetailInfo([])
 
     def updateWindowMenu(self):
         self.windowMenu.clear()

@@ -33,12 +33,15 @@ class NodeExample(BaseNode):
         # details面板，自由发挥，最后append到detailsInfo即可
         group = QGroupBox('Params')
         group_layout = QVBoxLayout()
+
+        # 每行label+edit
         app_layout = QHBoxLayout()
         label = QLabel("自定义属性")
         self.edit_app_name = QLineEdit()
         app_layout.addWidget(label)
         app_layout.addWidget(self.edit_app_name)
         group_layout.addLayout(app_layout)
+
         group.setLayout(group_layout)
 
         self.detailsInfo.append(group)

@@ -17,7 +17,7 @@ from nodes.node_base import BaseNode
 
 @register_node("FIND_DEVICE")
 class NodeDevices(BaseNode):
-    icon = "icons/phone.png"
+    icon = "icons/device.png"
     op_code = "FIND_DEVICE"
     op_title = "设备列表"
     content_label_objname = "node_device"

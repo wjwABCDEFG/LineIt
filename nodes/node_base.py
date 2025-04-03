@@ -2,12 +2,12 @@ from PySide6.QtCore import QRectF
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QLabel
 
-from nodeeditor.node_node import Node
+from lt_ui_switch import ToggleSwitch
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodeeditor.node_graphics_node import QDMGraphicsNode
+from nodeeditor.node_node import Node
 from nodeeditor.node_socket import LEFT_CENTER, RIGHT_CENTER
 from nodeeditor.utils_no_qt import dumpException
-
 
 DEBUG = False
 
@@ -60,6 +60,7 @@ class BaseNode(Node):
         super().__init__(scene, self.__class__.op_title, inputs, outputs)
 
         self.value = None       # 用于存储当前节点计算结果
+        self.switch = None      # 开关QWidget
         self.detailsInfo = []   # details面板显示的信息，必须是list[QWidget]
         self.createDetailsInfo()
         self.markDirty()        # 一开始是dirty的，因为dirty才可以允许eval
@@ -74,7 +75,8 @@ class BaseNode(Node):
         self.output_socket_position = RIGHT_CENTER
 
     def createDetailsInfo(self):
-        self.detailsInfo = []       # 一般都是需要先清空一次
+        self.switch = ToggleSwitch()
+        self.detailsInfo.append(self.switch)
 
     def evalOperation(self, *args):
         """
@@ -110,7 +112,10 @@ class BaseNode(Node):
                 # 修改后的流程为:
                 # eval/Implementation->evalInput(父节点)->再次判断->evalOperation(本节点)->evalChildren(子节点)
                 return self.value
-            val = self.evalOperation(input_vals)
+            if not self.switch.isChecked():
+                val = input_node.value
+            else:
+                val = self.evalOperation(input_vals)
             self.value = val    # 计算完成，存入当前value，这是很重要的一步，下个节点就可以从这里拿值，也是一个cache
             self.markDirty(False)
             self.markInvalid(False)
@@ -147,6 +152,7 @@ class BaseNode(Node):
     def serialize(self):
         res = super().serialize()
         res['op_code'] = self.__class__.op_code
+        res['details_info'] = {'state': self.switch.isChecked()}
         return res
 
     def deserialize(self, data, hashmap={}, restore_id=True):

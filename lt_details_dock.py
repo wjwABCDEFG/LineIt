@@ -13,9 +13,10 @@ class LineItDetailsDock(QWidget):
         # 允许节点往details面板添加自己需要的可配置信息
         # 在qt中，只是想移除（界面），但并不想删除deleteLater子组件（下次可能还用），应该像这样解除绑定而不是删除
         # 另：在qt中，应该通过layout来操作变动，而不要重新创建layout再setLayout，没有效果的
-        item = self.info_layout.takeAt(0)
-        if item and item.widget():
-            item.widget().setParent(None)
+        while self.info_layout.itemAt(0):
+            item = self.info_layout.takeAt(0)
+            if item and item.widget():
+                item.widget().setParent(None)
 
         for group in info:
             self.info_layout.addWidget(group)

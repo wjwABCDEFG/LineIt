@@ -25,8 +25,7 @@ class NodePython(BaseNode):
         super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
-        self.detailsInfo = []
-
+        super().createDetailsInfo()
         group = QGroupBox('PythonCode')
         group_layout = QVBoxLayout(group)
 

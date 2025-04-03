@@ -29,8 +29,7 @@ class NodePerf(BaseNode):
         super().__init__(scene, inputs=[1], outputs=[1])
 
     def createDetailsInfo(self):
-        self.detailsInfo = []
-
+        super().createDetailsInfo()
         group = QGroupBox('Params')
         group_layout = QVBoxLayout(group)
 

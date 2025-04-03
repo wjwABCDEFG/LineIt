@@ -7,13 +7,12 @@
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from lt_dev_mgr import dev_mgr
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
 
 
-# @register_node("EXAMPLE")                   # 加了这个装饰器才会显示在左边节点列表中
+# @register_node("EXAMPLE")                   # 放开这段注释，加了这个装饰器才会显示在左边节点列表中
 class NodeExample(BaseNode):
     icon = "icons/store.png"                # 这是图标
     op_title = "EXAMPLE节点"                 # 这是title

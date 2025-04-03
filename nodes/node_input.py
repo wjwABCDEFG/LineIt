@@ -1,14 +1,9 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLineEdit
-
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
-from nodes.node_base import BaseGraphicsNode, BaseNode
+from nodes.node_base import BaseNode
 
 
 @register_node("INPUT")
-class CalcNode_Input(BaseNode):
+class NodeInput(BaseNode):
     icon = "icons/in.png"
     op_code = "INPUT"
     op_title = "Input"

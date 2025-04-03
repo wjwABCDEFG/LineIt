@@ -26,8 +26,7 @@ class NodeInstall(BaseNode):
         super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
-        self.detailsInfo = []
-
+        super().createDetailsInfo()
         group = QGroupBox('Params')
         group_layout = QVBoxLayout()
 

@@ -3,13 +3,11 @@
 @Time    : 2025/3/19 23:10
 @Author  : wenjiawei
 """
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 
 import global_data
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodes.node_base import BaseNode, BaseGraphicsNode
+from nodes.node_base import BaseNode
 
 
 @register_node("STORE")
@@ -23,8 +21,7 @@ class NodeStore(BaseNode):
         super().__init__(scene, inputs=[1], outputs=[])
 
     def createDetailsInfo(self):
-        self.detailsInfo = []
-
+        super().createDetailsInfo()
         group = QGroupBox('Params')
         group_layout = QVBoxLayout()
 

@@ -4,10 +4,8 @@
 @Author  : wenjiawei
 """
 import os
-import time
 
-from PySide6.QtCore import Qt, QPoint, QRect
-from PySide6.QtGui import QCursor
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
@@ -28,8 +26,7 @@ class NodeScan(BaseNode):
         super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
-        self.detailsInfo = []
-
+        super().createDetailsInfo()
         group = QGroupBox('Params')
         group_layout = QVBoxLayout(group)
 

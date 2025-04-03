@@ -19,13 +19,16 @@
                 }
             ],
             "content": {},
-            "op_code": "FIND_DEVICE"
+            "op_code": "FIND_DEVICE",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2211180911760,
             "title": "Arg2Val",
             "pos_x": -94.0,
-            "pos_y": -169.0,
+            "pos_y": -171.0,
             "inputs": [
                 {
                     "id": 2211181511152,
@@ -45,7 +48,10 @@
                 }
             ],
             "content": {},
-            "op_code": "Arg2Val"
+            "op_code": "Arg2Val",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2211181526128,
@@ -73,7 +79,10 @@
             "content": {
                 "value": "com.android.mms"
             },
-            "op_code": "LAUNCH_APP"
+            "op_code": "LAUNCH_APP",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2211181803216,
@@ -101,7 +110,10 @@
             "content": {
                 "value": "0.5"
             },
-            "op_code": "WAIT_TIME"
+            "op_code": "WAIT_TIME",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2211181947168,
@@ -127,7 +139,10 @@
                 }
             ],
             "content": {},
-            "op_code": "SCREEN_CAPTURE"
+            "op_code": "SCREEN_CAPTURE",
+            "details_info": {
+                "state": true
+            }
         }
     ],
     "edges": [

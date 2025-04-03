@@ -19,13 +19,16 @@
                 }
             ],
             "content": {},
-            "op_code": "INPUT"
+            "op_code": "INPUT",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 1856765130544,
             "title": "\u6240\u6709\u6587\u4ef6",
             "pos_x": -145.0,
-            "pos_y": -181.0,
+            "pos_y": -188.0,
             "inputs": [
                 {
                     "id": 1856765131024,
@@ -50,7 +53,10 @@
                     "ext": "jpg"
                 }
             },
-            "op_code": "SCAN_FILE"
+            "op_code": "SCAN_FILE",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2266191001488,
@@ -81,7 +87,10 @@
                     "fmt": "_"
                 }
             },
-            "op_code": "RENAME"
+            "op_code": "RENAME",
+            "details_info": {
+                "state": true
+            }
         }
     ],
     "edges": [

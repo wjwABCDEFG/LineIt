@@ -19,7 +19,10 @@
                 }
             ],
             "content": {},
-            "op_code": "FIND_DEVICE"
+            "op_code": "FIND_DEVICE",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 1841836523232,
@@ -47,13 +50,16 @@
             "content": {
                 "value": "com.android.mms"
             },
-            "op_code": "LAUNCH_APP"
+            "op_code": "LAUNCH_APP",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2910560233328,
             "title": "Arg2Val",
             "pos_x": -60.0,
-            "pos_y": -141.0,
+            "pos_y": -142.0,
             "inputs": [
                 {
                     "id": 2910560331104,
@@ -73,7 +79,10 @@
                 }
             ],
             "content": {},
-            "op_code": "Arg2Val"
+            "op_code": "Arg2Val",
+            "details_info": {
+                "state": true
+            }
         }
     ],
     "edges": [

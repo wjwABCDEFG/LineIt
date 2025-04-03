@@ -19,7 +19,10 @@
                 }
             ],
             "content": {},
-            "op_code": "FIND_DEVICE"
+            "op_code": "FIND_DEVICE",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2733874113856,
@@ -47,7 +50,10 @@
             "content": {
                 "value": "D:\\LineIt\\Magisk-v26.1.apk"
             },
-            "op_code": "INSTALL_APP"
+            "op_code": "INSTALL_APP",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2910545393360,
@@ -73,7 +79,10 @@
                 }
             ],
             "content": {},
-            "op_code": "Arg2Val"
+            "op_code": "Arg2Val",
+            "details_info": {
+                "state": false
+            }
         }
     ],
     "edges": [

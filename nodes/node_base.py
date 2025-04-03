@@ -1,4 +1,4 @@
-from PySide6.QtCore import QRectF
+from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QLabel
 
@@ -157,5 +157,6 @@ class BaseNode(Node):
 
     def deserialize(self, data, hashmap={}, restore_id=True):
         res = super().deserialize(data, hashmap, restore_id)
+        self.switch.setCheckState(Qt.CheckState.Checked if data['details_info']['state'] else Qt.CheckState.Unchecked)
         if DEBUG: print("Deserialized CalcNode '%s'" % self.__class__.__name__, "res:", res)
         return res

@@ -7,7 +7,7 @@
             "id": 1915721510112,
             "title": "\u8bbe\u5907\u5217\u8868",
             "pos_x": -217.0,
-            "pos_y": -143.0,
+            "pos_y": -145.0,
             "inputs": [],
             "outputs": [
                 {
@@ -19,7 +19,10 @@
                 }
             ],
             "content": {},
-            "op_code": "FIND_DEVICE"
+            "op_code": "FIND_DEVICE",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 1915697948336,
@@ -47,13 +50,16 @@
             "content": {
                 "value": "com.netease.cloudmusic"
             },
-            "op_code": "PERF"
+            "op_code": "PERF",
+            "details_info": {
+                "state": true
+            }
         },
         {
             "id": 2295435061344,
             "title": "Arg2Val",
-            "pos_x": -8.0,
-            "pos_y": -112.0,
+            "pos_x": -11.0,
+            "pos_y": -110.0,
             "inputs": [
                 {
                     "id": 2295435061104,
@@ -73,7 +79,10 @@
                 }
             ],
             "content": {},
-            "op_code": "Arg2Val"
+            "op_code": "Arg2Val",
+            "details_info": {
+                "state": true
+            }
         }
     ],
     "edges": [

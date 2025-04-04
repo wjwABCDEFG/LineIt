@@ -7,9 +7,8 @@ import requests
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("HTTP")
@@ -108,25 +107,32 @@ class NodeHTTP(BaseNode):
                                 self.files.text())
         return resp.json()
 
-    # 重写Graph类的serialize/deserialize方法，这不是必要的，如果自定义了createDetailsInfo，且里面的数据需要保存文件时持久化才需要这这步
-    class NodeInputContent(QDMNodeContentWidget):
+    # 重写serialize/deserialize方法不是必要的，如果自定义了createDetailsInfo，且里面的数据需要保存文件时持久化，那么需要
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info'].update({
+            "request_method": self.request_method.text(),
+            "url": self.url.text(),
+            "data": self.data.text(),
+            "json": self.json.toPlainText(),
+            "params": self.params.text(),
+            "headers": self.headers.text(),
+            "cookies": self.cookies.text(),
+            # "files": self.files.text()
+        })
+        return res
 
-        def initUI(self):
-            pass
-
-        def serialize(self):
-            res = super().serialize()
-            # res['value'] = self.node.edit_app_name.text()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                # self.node.edit_app_name.setText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        info = data['details_info']
+        self.request_method.setText(info['request_method'])
+        self.url.setText(info['url'])
+        self.data.setText(info['data'])
+        self.json.setPlainText(info['json'])
+        self.params.setText(info['params'])
+        self.headers.setText(info['headers'])
+        self.cookies.setText(info['cookies'])
+        # self.files.setText(info['files'])
+        return res

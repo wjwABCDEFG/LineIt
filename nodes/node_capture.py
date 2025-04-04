@@ -6,7 +6,7 @@
 from datetime import datetime
 
 from lt_conf import register_node
-from lt_dev_mgr import dev_mgr
+from utils.lt_dev_mgr import dev_mgr
 from nodes.node_base import BaseNode
 
 

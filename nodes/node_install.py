@@ -8,7 +8,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from lt_dev_mgr import dev_mgr
+from utils.lt_dev_mgr import dev_mgr
 from nodes.node_base import BaseNode
 from utils import throwException
 

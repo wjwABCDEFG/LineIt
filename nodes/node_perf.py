@@ -10,7 +10,7 @@ from PySide6.QtGui import QPen, QPainter
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from lt_dev_mgr import dev_mgr
+from utils.lt_dev_mgr import dev_mgr
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode

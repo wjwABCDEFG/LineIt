@@ -2,7 +2,7 @@ from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QLabel
 
-from lt_ui_switch import ToggleSwitch
+from utils.lt_ui_switch import ToggleSwitch
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodeeditor.node_graphics_node import QDMGraphicsNode
 from nodeeditor.node_node import Node

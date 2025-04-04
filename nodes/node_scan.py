@@ -9,9 +9,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("SCAN_FILE")
@@ -57,28 +56,19 @@ class NodeScan(BaseNode):
             res = [os.path.join(path, i) for i in res if i.endswith(self.ui_ext.text())]
         return res
 
-    # 重写Graph类的serialize/deserialize方法
-    class NodeInputContent(QDMNodeContentWidget):
-        def initUI(self):
-            pass
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info'].update({
+            'file_path': self.ui_path.text(),
+            'ext': self.ui_ext.text()
+        })
+        return res
 
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = {
-                'file_path': self.node.ui_path.text(),
-                'ext': self.node.ui_ext.text()
-            }
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.ui_path.setText(value['file_path'])
-                self.node.ui_ext.setText(value['ext'])
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        info = data['details_info']
+        self.ui_path.setText(info['file_path'])
+        self.ui_ext.setText(info['ext'])
+        return res

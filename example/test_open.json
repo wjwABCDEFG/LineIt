@@ -47,12 +47,11 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": "com.android.mms"
-            },
+            "content": {},
             "op_code": "LAUNCH_APP",
             "details_info": {
-                "state": true
+                "state": true,
+                "app_name": "com.android.mms"
             }
         },
         {

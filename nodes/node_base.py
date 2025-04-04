@@ -8,6 +8,7 @@ from nodeeditor.node_graphics_node import QDMGraphicsNode
 from nodeeditor.node_node import Node
 from nodeeditor.node_socket import LEFT_CENTER, RIGHT_CENTER
 from nodeeditor.utils_no_qt import dumpException
+from utils import throwException
 
 DEBUG = False
 
@@ -149,12 +150,14 @@ class BaseNode(Node):
         self.markDirty()
         # self.eval()   # 这里不要连线自动计算了
 
+    @throwException
     def serialize(self):
         res = super().serialize()
         res['op_code'] = self.__class__.op_code
         res['details_info'] = {'state': self.switch.isChecked()}
         return res
 
+    @throwException
     def deserialize(self, data, hashmap={}, restore_id=True):
         res = super().deserialize(data, hashmap, restore_id)
         self.switch.setCheckState(Qt.CheckState.Checked if data['details_info']['state'] else Qt.CheckState.Unchecked)

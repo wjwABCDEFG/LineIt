@@ -47,22 +47,19 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": {
-                    "file_path": "C:\\Users\\wen\\Desktop\\tiger_rc",
-                    "ext": "jpg"
-                }
-            },
+            "content": {},
             "op_code": "SCAN_FILE",
             "details_info": {
-                "state": true
+                "state": true,
+                "file_path": "C:\\Users\\wen\\Desktop\\tiger_rc",
+                "ext": "jpg"
             }
         },
         {
             "id": 2266191001488,
             "title": "\u6279\u91cf\u91cd\u547d\u540d",
             "pos_x": 79.0,
-            "pos_y": -143.0,
+            "pos_y": -144.0,
             "inputs": [
                 {
                     "id": 2266191001200,
@@ -81,15 +78,12 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": {
-                    "prefix": "tiger",
-                    "fmt": "_"
-                }
-            },
+            "content": {},
             "op_code": "RENAME",
             "details_info": {
-                "state": true
+                "state": true,
+                "prefix": "tiger",
+                "fmt": "_"
             }
         }
     ],

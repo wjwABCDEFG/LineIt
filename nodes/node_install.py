@@ -9,9 +9,8 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from lt_dev_mgr import dev_mgr
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("INSTALL_APP")
@@ -22,7 +21,7 @@ class NodeInstall(BaseNode):
     content_label_objname = "node_install"   # 这是样式qss名称
 
     def __init__(self, scene, inputs=[2], outputs=[1]):
-        self.edit_text = None
+        self.app_path = None
         super().__init__(scene, inputs, outputs)
 
     def createDetailsInfo(self):
@@ -33,9 +32,9 @@ class NodeInstall(BaseNode):
         app_layout = QHBoxLayout()
         label = QLabel("apk绝对路径")
         label.setAlignment(Qt.AlignRight)  # 设置右对齐
-        self.edit_text = QLineEdit()
+        self.app_path = QLineEdit()
         app_layout.addWidget(label)
-        app_layout.addWidget(self.edit_text)
+        app_layout.addWidget(self.app_path)
 
         group_layout.addLayout(app_layout)
         group.setLayout(group_layout)
@@ -43,30 +42,20 @@ class NodeInstall(BaseNode):
         self.detailsInfo.append(group)
 
     def evalOperation(self, *args):
-        app_name = self.edit_text.text()
+        app_name = self.app_path.text()
         dev = self.getInput(0).value
         dev_mgr.installApp(dev, app_name)
         return dev
 
-    # 重写Graph类的serialize/deserialize方法
-    class NodeInputContent(QDMNodeContentWidget):
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info']['app_path'] = self.app_path.text()
+        return res
 
-        def initUI(self):
-            pass
-
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = self.node.edit_text.text()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.edit_text.setText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        value = data['details_info']['app_path']
+        self.app_path.setText(value)
+        return res

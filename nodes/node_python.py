@@ -9,9 +9,8 @@ import subprocess
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("PYTHON")
@@ -66,25 +65,15 @@ class NodePython(BaseNode):
         except Exception as e:
             print(f"未知错误：{e}")
 
-    # 重写Graph类的serialize/deserialize方法
-    class NodeInputContent(QDMNodeContentWidget):
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info']['code'] = self.ui_code.toPlainText()
+        return res
 
-        def initUI(self):
-            pass
-
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = self.node.ui_code.toPlainText()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.ui_code.setPlainText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        value = data['details_info']['code']
+        self.ui_code.setPlainText(value)
+        return res

@@ -8,9 +8,8 @@ import os
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("RENAME")
@@ -70,28 +69,19 @@ class NodeRename(BaseNode):
             os.rename(old_file, new_file)
         return True
 
-    # 重写Graph类的serialize/deserialize方法
-    class NodeInputContent(QDMNodeContentWidget):
-        def initUI(self):
-            pass
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info'].update({
+            'prefix': self.ui_prefix.text(),
+            'fmt': self.ui_fmt.text()
+        })
+        return res
 
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = {
-                'prefix': self.node.ui_prefix.text(),
-                'fmt': self.node.ui_fmt.text()
-            }
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.ui_prefix.setText(value['prefix'])
-                self.node.ui_fmt.setText(value['fmt'])
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        info = data['details_info']
+        self.ui_prefix.setText(info['prefix'])
+        self.ui_fmt.setText(info['fmt'])
+        return res

@@ -11,8 +11,8 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("WAIT_TIME")
@@ -58,6 +58,18 @@ class NodeWait(BaseNode):
         # 该节点会保留对父节点的value，这样对后续节点就好像除了延迟什么都没变化一样
         return self.getInput(0).value
 
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info']['wait_time'] = self.ui_wait_time.text()
+        return res
+
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        self.ui_wait_time.setText(data['details_info']['wait_time'])
+        return res
+
     # 重写Graph类的serialize/deserialize方法
     class NodeInputContent(QDMNodeContentWidget):
         def initUI(self):
@@ -73,20 +85,5 @@ class NodeWait(BaseNode):
                     QRect(),  # 无关联控件区域
                     2000  # 提示显示时间（毫秒）
                 )
-
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = self.node.ui_wait_time.text()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.ui_wait_time.setText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
 
     NodeContent_class = NodeInputContent

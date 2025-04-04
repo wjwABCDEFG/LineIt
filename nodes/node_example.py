@@ -7,9 +7,8 @@
 from PySide6.QtWidgets import *
 
 from lt_conf import register_node
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 # @register_node("EXAMPLE")                   # 放开这段注释，加了这个装饰器才会显示在左边节点列表中
@@ -55,25 +54,16 @@ class NodeExample(BaseNode):
         val = self.getInput(0).value        # getInput可以指定从input的第几个socket中取值
         return val
 
-    # 重写Graph类的serialize/deserialize方法，这不是必要的，如果自定义了createDetailsInfo，且里面的数据需要保存文件时持久化才需要这这步
-    class NodeInputContent(QDMNodeContentWidget):
+    # 重写serialize/deserialize方法不是必要的，如果自定义了createDetailsInfo，且里面的数据需要保存文件时持久化，那么需要
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info']['app_name'] = self.edit_app_name.text()
+        return res
 
-        def initUI(self):
-            pass
-
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = self.node.edit_app_name.text()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.edit_app_name.setText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        info = data['details_info']
+        self.edit_app_name.setText(info['app_name'])
+        return res

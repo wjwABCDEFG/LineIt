@@ -47,12 +47,11 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": "D:\\LineIt\\Magisk-v26.1.apk"
-            },
+            "content": {},
             "op_code": "INSTALL_APP",
             "details_info": {
-                "state": true
+                "state": true,
+                "app_path": "C:\\Users\\wen\\Desktop\\Magisk-v26.1.apk"
             }
         },
         {
@@ -81,7 +80,7 @@
             "content": {},
             "op_code": "Arg2Val",
             "details_info": {
-                "state": false
+                "state": true
             }
         }
     ],

@@ -76,22 +76,21 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": "com.android.mms"
-            },
+            "content": {},
             "op_code": "LAUNCH_APP",
             "details_info": {
-                "state": true
+                "state": true,
+                "app_name": "com.android.mms"
             }
         },
         {
-            "id": 2211181803216,
+            "id": 3185930926880,
             "title": "\u7b49\u5f850.5s",
-            "pos_x": 104.0,
-            "pos_y": -20.0,
+            "pos_x": 100.0,
+            "pos_y": -28.0,
             "inputs": [
                 {
-                    "id": 2211181805184,
+                    "id": 3185930914496,
                     "index": 0,
                     "multi_edges": false,
                     "position": 2,
@@ -100,29 +99,28 @@
             ],
             "outputs": [
                 {
-                    "id": 2211181804704,
+                    "id": 3185930919440,
                     "index": 0,
                     "multi_edges": true,
                     "position": 5,
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": "0.5"
-            },
+            "content": {},
             "op_code": "WAIT_TIME",
             "details_info": {
-                "state": true
+                "state": true,
+                "wait_time": "0.5"
             }
         },
         {
-            "id": 2211181947168,
+            "id": 3185921561008,
             "title": "\u622a\u5c4f",
-            "pos_x": 103.0,
-            "pos_y": 99.0,
+            "pos_x": 99.0,
+            "pos_y": 78.0,
             "inputs": [
                 {
-                    "id": 2211181949088,
+                    "id": 3185930924576,
                     "index": 0,
                     "multi_edges": false,
                     "position": 2,
@@ -131,7 +129,7 @@
             ],
             "outputs": [
                 {
-                    "id": 2211181951488,
+                    "id": 3185930924480,
                     "index": 0,
                     "multi_edges": true,
                     "position": 5,
@@ -159,16 +157,16 @@
             "end": 2211181793088
         },
         {
-            "id": 2087789690544,
+            "id": 3185930920016,
             "edge_type": 2,
             "start": 2211181792608,
-            "end": 2211181805184
+            "end": 3185930914496
         },
         {
-            "id": 2087789689344,
+            "id": 3185930914976,
             "edge_type": 2,
-            "start": 2211181804704,
-            "end": 2211181949088
+            "start": 3185930919440,
+            "end": 3185930924576
         }
     ]
 }

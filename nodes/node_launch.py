@@ -9,9 +9,8 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from lt_dev_mgr import dev_mgr
-from nodeeditor.node_content_widget import QDMNodeContentWidget
-from nodeeditor.utils_no_qt import dumpException
 from nodes.node_base import BaseNode
+from utils import throwException
 
 
 @register_node("LAUNCH_APP")
@@ -50,25 +49,15 @@ class NodeLaunch(BaseNode):
         dev_mgr.launchApp(dev, app_name)
         return dev
 
-    # 重写Graph类的serialize/deserialize方法
-    class NodeInputContent(QDMNodeContentWidget):
+    @throwException
+    def serialize(self):
+        res = super().serialize()
+        res['details_info']['app_name'] = self.edit_app_name.text()
+        return res
 
-        def initUI(self):
-            pass
-
-        def serialize(self):
-            res = super().serialize()
-            res['value'] = self.node.edit_app_name.text()
-            return res
-
-        def deserialize(self, data, hashmap={}):
-            res = super().deserialize(data, hashmap)
-            try:
-                value = data['value']
-                self.node.edit_app_name.setText(value)
-                return True & res
-            except Exception as e:
-                dumpException(e)
-            return res
-
-    NodeContent_class = NodeInputContent
+    @throwException
+    def deserialize(self, data, hashmap={}, restore_id=True):
+        res = super().deserialize(data, hashmap)
+        value = data['details_info']['app_name']
+        self.edit_app_name.setText(value)
+        return res

@@ -26,12 +26,11 @@
                     "socket_type": 1
                 }
             ],
-            "content": {
-                "value": "import os\na = os.listdir()\nprint(a)"
-            },
+            "content": {},
             "op_code": "PYTHON",
             "details_info": {
-                "state": true
+                "state": true,
+                "code": "import os\na = os.listdir()\nprint(a)"
             }
         },
         {

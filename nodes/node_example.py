@@ -8,7 +8,7 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from nodes.node_base import BaseNode
-from utils import throwException
+from utils.util_simple import throwException
 
 
 # @register_node("EXAMPLE")                   # 放开这段注释，加了这个装饰器才会显示在左边节点列表中

@@ -9,7 +9,7 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from nodes.node_base import BaseNode
-from utils import throwException
+from utils.util_simple import throwException
 
 
 @register_node("RENAME")
@@ -55,7 +55,7 @@ class NodeRename(BaseNode):
 
         self.detailsInfo.append(group)
 
-    def evalOperation(self, *args):
+    def evalOperation(self, *args) -> bool:
         i1 = self.getInput(0)
         align0 = self.ui_align0.isChecked()
         count = 0

@@ -8,7 +8,7 @@ from PySide6.QtWidgets import *
 
 from lt_conf import register_node
 from nodes.node_base import BaseNode
-from utils import throwException
+from utils.util_simple import throwException
 
 
 @register_node("HTTP")
@@ -92,10 +92,10 @@ class NodeHTTP(BaseNode):
         group.setLayout(group_layout)
         self.detailsInfo.append(group)
 
-    def evalOperation(self, *args):
+    def evalOperation(self, *args) -> dict:
         """
         节点eval时的操作
-        :return: val，运行时return的值会成为该节点的value
+        :return: dict 运行时return的值会成为该节点的value
         """
         resp = requests.Request(self.request_method.text(),
                                 self.url.text(),

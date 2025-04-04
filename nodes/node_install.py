@@ -10,7 +10,7 @@ from PySide6.QtWidgets import *
 from lt_conf import register_node
 from utils.lt_dev_mgr import dev_mgr
 from nodes.node_base import BaseNode
-from utils import throwException
+from utils.util_simple import throwException
 
 
 @register_node("INSTALL_APP")
@@ -41,7 +41,7 @@ class NodeInstall(BaseNode):
 
         self.detailsInfo.append(group)
 
-    def evalOperation(self, *args):
+    def evalOperation(self, *args) -> str:
         app_name = self.app_path.text()
         dev = self.getInput(0).value
         dev_mgr.installApp(dev, app_name)

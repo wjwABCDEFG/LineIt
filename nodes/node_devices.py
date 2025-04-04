@@ -45,6 +45,12 @@ class NodeDevices(BaseNode):
             t.start()
             t.join()
         return self.value
+    
+    def evalOperation(self, *args):
+        """
+        :return: str
+        """
+        super().evalOperation()
 
     class NodeDevicesOutputContent(QDMNodeContentWidget):
         deviceChanged = Signal(dict)

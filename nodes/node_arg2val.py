@@ -37,3 +37,6 @@ class NodeArg2Val(BaseNode):
         self.grNode.setToolTip("")
         self.evalChildren()
         return self.value
+
+    def evalOperation(self, dev: str, *args) -> str:
+        super().evalOperation()

@@ -26,6 +26,7 @@ SOCKET_COLORS = [
     QColor("#FF888888"),
 ]
 
+
 class QDMGraphicsSocket(QGraphicsItem):
     """Class representing Graphic `Socket` in ``QGraphicsScene``"""
     def __init__(self, socket:'Socket'):

@@ -12,7 +12,7 @@ from PySide6.QtWidgets import *
 from lt_conf import register_node
 from nodeeditor.node_content_widget import QDMNodeContentWidget
 from nodes.node_base import BaseNode
-from utils import throwException
+from utils.util_simple import throwException
 
 
 @register_node("WAIT_TIME")

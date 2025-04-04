@@ -1,3 +1,6 @@
+import builtins
+import re
+
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QLabel
@@ -8,7 +11,7 @@ from nodeeditor.node_graphics_node import QDMGraphicsNode
 from nodeeditor.node_node import Node
 from nodeeditor.node_socket import LEFT_CENTER, RIGHT_CENTER
 from nodeeditor.utils_no_qt import dumpException
-from utils import throwException
+from utils.util_simple import throwException, type_to_color
 
 DEBUG = False
 
@@ -57,7 +60,8 @@ class BaseNode(Node):
     GraphicsNode_class = BaseGraphicsNode
     NodeContent_class = BaseNodeContent
 
-    def __init__(self, scene, inputs=[2,2], outputs=[1]):
+    def __init__(self, scene, inputs=[0, 1], outputs=[2]):
+        inputs, outputs = self.guessSocketType(inputs, outputs)
         super().__init__(scene, self.__class__.op_title, inputs, outputs)
 
         self.value = None       # 用于存储当前节点计算结果
@@ -74,6 +78,39 @@ class BaseNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+    def guessSocketType(self, need_inputs, need_outputs) -> (list, list):
+        """
+        非强制性解析socket类型并标注颜色
+        通过解析evalOperation的注释来完成
+        1: typehint类型标注def func(param1: str): -> dict
+        2: 三引号注释中的:return: dict xxxx
+        :return: (inputs, outputs)
+        """
+        inputs, outputs = need_inputs, need_outputs
+
+        # 先按typehint解析
+        in_idx = 0
+        annos = self.__class__.evalOperation.__annotations__
+        if annos:
+            for anno, type_cls in annos.items():
+                if anno == 'return':
+                    outputs[0] = type_to_color(type_cls)    # output节点在这里只有一个
+                else:
+                    inputs[in_idx] = type_to_color(type_cls)
+                    in_idx += 1
+            return inputs, outputs
+
+        # 再按三引号注释解析
+        doc = self.__class__.evalOperation.__doc__
+        if doc:
+            match = re.search(r':return:\s*(\w+)', doc)
+            if match:
+                type_str = match.group(1)
+                type_obj = getattr(builtins, type_str, None)
+                outputs[0] = type_to_color(type_obj)
+
+        return inputs, outputs
 
     def createDetailsInfo(self):
         self.switch = ToggleSwitch()

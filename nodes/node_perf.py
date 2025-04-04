@@ -134,7 +134,7 @@ class PerfWidget(QWidget):
 
     def closeEvent(self, event):
         # 关闭窗口时停止线程
-        self.collector_thread.stop()
+        self.collector_thread and self.collector_thread.stop()
         event.accept()
 
 

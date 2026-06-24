@@ -134,7 +134,12 @@ class _IOSHelper(_Helper):
     def listDevice():
         # TODO
         try:
-            return usbmux.list_devices()
+            cmd = "pymobiledevice3 usbmux list"
+            devices_output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            devices = [line.split()[0] for line in devices_output.stdout.splitlines()[1:] if line and 'device' in line]
+            # print(devices)
+            return devices
+            # return usbmux.list_devices()
         except:
             # traceback.print_exc()
             return []
@@ -148,7 +153,6 @@ class DevManager:
         self.android_devs = dict()
         self.ios_devs = dict()
         self._is_monitor_working = False
-        self.start_monitor()
         self._dev_changed_event_listeners = []
 
     def start_monitor(self):

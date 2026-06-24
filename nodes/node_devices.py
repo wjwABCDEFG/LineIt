@@ -24,6 +24,7 @@ class NodeDevices(BaseNode):
 
     def __init__(self, scene):
         super().__init__(scene, inputs=[])
+        dev_mgr.start_monitor()
         dev_mgr.addDevChangedEventListener(self.onChanged)
         self.onChanged(None)        # 一开始先来一次
         self.process_list = []

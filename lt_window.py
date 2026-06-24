@@ -10,6 +10,7 @@ from PySide6.QtGui import QIcon, QAction, QKeySequence
 from PySide6.QtWidgets import *
 
 from lt_details_dock import LineItDetailsDock
+from lt_log_dock import LineItLogDock
 from utils.lt_dev_mgr import dev_mgr
 from lt_nodes_list import LineItNodesList
 from lt_sub_window import LineItSubWindow
@@ -51,6 +52,7 @@ class LineItWindow(NodeEditorWindow):
 
         self.createNodesDock()
         self.createDetailsDock()
+        self.createLogDock()
         self.createActions()
         self.createMenus()
         self.createToolBars()
@@ -245,6 +247,15 @@ class LineItWindow(NodeEditorWindow):
         self.detailsDock.setFloating(True)
 
         self.addDockWidget(Qt.RightDockWidgetArea, self.detailsDock)
+
+    def createLogDock(self):
+        self.logDockWidget = LineItLogDock()
+        self.logDockWidget.setMinimumWidth(300)
+        self.logDock = QDockWidget("Log")
+        self.logDock.setWidget(self.logDockWidget)
+        self.logDock.setFloating(True)
+
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.logDock)
 
     def createStatusBar(self):
         self.statusBar().showMessage("Ready")

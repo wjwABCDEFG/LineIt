@@ -1,3 +1,7 @@
+import importlib
+import os
+from os.path import dirname, isdir, join
+
 LISTBOX_MIMETYPE = "application/x-item"
 
 
@@ -33,3 +37,11 @@ def get_class_from_opcode(op_code):
 
 # import all nodes and register them
 from nodes import *
+
+# 动态import所有子包
+nodes_dir = join(dirname(__file__), 'nodes')
+for name in os.listdir(nodes_dir):
+    pkg_path = join(nodes_dir, name)
+    if isdir(pkg_path) and os.path.exists(join(pkg_path, '__init__.py')):
+        mod = importlib.import_module(f'nodes.{name}')
+        globals().update(vars(mod))

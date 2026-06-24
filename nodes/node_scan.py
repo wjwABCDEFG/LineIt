@@ -49,7 +49,7 @@ class NodeScan(BaseNode):
 
         self.detailsInfo.append(group)
 
-    def evalOperation(self, *args):
+    def evalOperation(self, *args) -> list:
         path = self.ui_path.text()
         res = os.listdir(path)
         if self.ui_ext.text():
